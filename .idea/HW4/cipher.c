@@ -6,15 +6,12 @@ int main(int argc, char *argv[]) {
     int shift = atoi(argv[2]);
 
     // throw any errors for incorrect input from user before asking for a string to decipher
-    if (argc != 2) {
+    if (argc != 3) {
         // throw error for incorrect shift value
         if (atoi(argv[2]) < 0) {
             puts("Invalid shift value");
         }
-        // throw error for encrypt/decrypt
-        if ((argv[1])[0] != '-' || ((argv[1])[1] != 'e') || ((argv[1])[1] != 'd')) {
-
-        }
+        // **throw error for encrypt/decrypt
         throwUsageErrorMessage();
         return 1;
     }
