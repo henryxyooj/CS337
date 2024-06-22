@@ -23,5 +23,6 @@ int main(int argc, char *argv[]) {
     // switch case for either a encryption or decryption?
         // using ascii, add 2 to the ascii value?
         // not: keep the case letters; digits and special characters doesn't change
+
     return 0;
 }
