@@ -3,20 +3,23 @@
 int main(int argc, char *argv[]) {
     //char input[50];
     //char ciphChoice;
-    int shift;
+    int shift = atoi(argv[2]);
 
-    // check for encryption or decryption, use lab1 to type in "-e" or "-d" with the argc and argv?
-    // throw more errors later
-    if (argc != 2 || argc == 1 || argc == 0) {
+    // throw any errors for incorrect input from user before asking for a string to decipher
+    if (argc != 2) {
+        // throw error for incorrect shift value
         if (atoi(argv[2]) < 0) {
             puts("Invalid shift value");
+        }
+        // throw error for encrypt/decrypt
+        if ((argv[1])[0] != '-' || ((argv[1])[1] != 'e') || ((argv[1])[1] != 'd')) {
+
         }
         throwUsageErrorMessage();
         return 1;
     }
 
     //ciphChoice = "hmm";
-    shift = atoi(argv[2]);
 
     printf("%s\t%d\t%s", argv[1], shift, argv[2]);
 
