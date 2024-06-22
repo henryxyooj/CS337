@@ -1,5 +1,5 @@
-main: main.c caesar.c
-	gcc -Wall -Wextra -std=c99 -o main main.c caesar.c
+main: cipher.c caesar.c
+	gcc -Wall -Wextra -std=c99 -o cipher cipher.c caesar.c
 
 clean:
-	rm -f main
+	rm -f cipher

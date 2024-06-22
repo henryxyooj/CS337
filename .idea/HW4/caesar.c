@@ -1,15 +1,14 @@
 #include "caesar.h"
 
-/*
-void getString(char ciphChoice, char* input[]) {
+void getString(char ciphChoice, char input[]) {
     switch (ciphChoice) {
-        case "-e":
+        case 'e':
+            printf("Enter a a message to encode: ");
+            fgets(input, MAX_TEXT_LENGTH, stdin);
             break;
-        case "-d":
+        case 'd':
+            printf("Enter a a message to decode: ");
+            fgets(input, MAX_TEXT_LENGTH, stdin);
             break;
     }
-*/
-
-void throwUsageErrorMessage() {
-    puts("Usage:\n\tTo encrypt: ./cipher -e <shift>\n\tTo decrypt: ./cipher -d <shift>");
 }

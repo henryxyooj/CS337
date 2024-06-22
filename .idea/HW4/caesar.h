@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-void throwUsageErrorMessage();
+#define MAX_TEXT_LENGTH 1024
 
-/*
-void getString(char ciphChoice, char* input[]);
-*/
+void getString(char ciphChoice, char input[]);
