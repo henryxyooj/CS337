@@ -1,5 +1,9 @@
 #include "caesar.h"
 
+void encrypt(char input[MAX_TEXT_LENGTH]) {
+
+}
+
 void getString(char ciphChoice, char input[MAX_TEXT_LENGTH], int* isExit) {
     switch (ciphChoice) {
         case 'e':
