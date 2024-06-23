@@ -4,7 +4,7 @@ int main(int argc, char *argv[]) {
     char input[MAX_TEXT_LENGTH];
     char ciphChoice = (argv[1])[1];
     int isExit = 0;
-    //int shift = atoi(argv[2]);
+    int shift = atoi(argv[2]);
 
     // throw any errors for incorrect input from user before asking for a string to decipher
     if (argc != 3) {
@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
         if ((atoi(argv[2])) < 0 && ((atoi(argv[2]) > 25))) {
             puts("Invalid shift value");
         }
-        // **throw error for encrypt/decrypt; note: turn back on shift on line 6**
+        // **throw error for encrypt/decrypt
 
         puts("Usage:\n\tTo encrypt: ./cipher -e <shift>\n\tTo decrypt: ./cipher -d <shift>");
         return 1;
@@ -25,11 +25,13 @@ int main(int argc, char *argv[]) {
         // switch case for either a encryption or decryption operation
         switch (ciphChoice) {
             case 'e':
-                //ecrypt();
+                encrypt(input, shift);
                 break;
             case 'd':
                 //decrypt();
                 break;
+            default:
+                throwSupportedOperationsError(&isExit);
         }
     }
 
