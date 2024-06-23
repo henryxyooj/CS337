@@ -1,17 +1,20 @@
 #include "caesar.h"
 
+void display(char input[MAX_TEXT_LENGTH]) {
+    for (unsigned long i = 0; i < (strlen(input) - 1); i++) {
+        printf("%c\t", input[i]);
+    }
+}
+
 void encrypt(char input[MAX_TEXT_LENGTH], int shift) {
     // loop through every char in the string
     //      find the ascii value of each char, and add the shift to it
     //      otherwise it's a special character, and ignore it
-    for (int i = 0; i < (strlen(input) - 1); i++) {
+    for (unsigned long i = 0; i < (strlen(input) - 1); i++) {
         if ((input[i] >= 'a' && input[i] <= 'z') || (input[i] >= 'A' && input[i] <= 'Z')) {
             input[i] = input[i] + shift;
-            printf("%c", input[i]);
         }
     }
-
-    // add
 }
 
 void getString(char ciphChoice, char input[MAX_TEXT_LENGTH], int* isExit) {
