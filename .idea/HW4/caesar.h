@@ -4,5 +4,5 @@
 
 #define MAX_TEXT_LENGTH 1024
 
-void getString(char ciphChoice, char input[], int* isExit);
-void throwInputMessageError(char input, char inputString[], int* isExit);
+void getString(char ciphChoice, char input[MAX_TEXT_LENGTH], int* isExit);
+void throwInputMessageError(char input);

@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    while (isExit) {
+    while (!isExit) {
         // get a string from the user
         getString(ciphChoice, input, &isExit);
 
