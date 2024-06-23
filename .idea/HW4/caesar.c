@@ -1,11 +1,15 @@
 #include "caesar.h"
 
 void encrypt(char input[MAX_TEXT_LENGTH], int shift) {
-    // find the size of input
-
     // loop through every char in the string
     //      find the ascii value of each char, and add the shift to it
     //      otherwise it's a special character, and ignore it
+    for (int i = 0; i < (strlen(input) - 1); i++) {
+        if ((input[i] >= 'a' && input[i] <= 'z') || (input[i] >= 'A' && input[i] <= 'Z')) {
+            input[i] = input[i] + shift;
+            printf("%c", input[i]);
+        }
+    }
 
     // add
 }
@@ -34,7 +38,7 @@ void getString(char ciphChoice, char input[MAX_TEXT_LENGTH], int* isExit) {
 
 void throwInputMessageError(char input) {
     if ((input == '\n') || (input == '\0')) {
-        puts("Usage: Enter a message to encode: <Enter message for requested operation>");
+        puts("Usage:\n<Enter message for requested operation>");
         exit(1);
     }
 }
