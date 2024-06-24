@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
                 encrypt(input, stringBuilder, shift);
                 break;
             case 'd':
-                //decrypt();
+                decrypt(input, stringBuilder, shift);
                 break;
             default:
                 throwSupportedOperationsError(&isExit);
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
     }
 
     // display the results of the encrypted/decrypted messages
-    display(stringBuilder);
+    display(stringBuilder, ciphChoice, isExit);
 
     return 0;
 }

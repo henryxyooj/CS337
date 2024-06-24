@@ -37,13 +37,28 @@ void addToArray(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH]
     strcat(stringBuilder, input);
 }
 
+void addToArrayOperations(int canExit, char stringBuilder[MAX_TEXT_LENGTH], char input[MAX_TEXT_LENGTH]) {
+    // if user decides to exit right away and/or chooses to exit
+    if (canExit == 10) {
+        return;
+    }
+
+    // if there's already something in stringBuilder, append it
+    if (strlen(stringBuilder) != 0) {
+        strcat(stringBuilder, ", ");
+    }
+
+    // base case of no messages in the stringBuilder, then concatenate it with the current input
+    strcat(stringBuilder, input);
+}
+
 void decrypt(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH], int shift) {
     // loop through every char in the string
     //      find the ascii value of each char, and add the shift to it
     //      otherwise it's a special character, and ignore it
     for (unsigned long i = 0; i < (strlen(input) - 1); i++) {
         if ((input[i] >= 'a' && input[i] <= 'z') || (input[i] >= 'A' && input[i] <= 'Z')) {
-            input[i] = input[i] + shift;
+            input[i] = input[i] - shift;
         }
     }
 

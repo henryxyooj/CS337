@@ -6,8 +6,10 @@
 
 void getString(char ciphChoice, char input[MAX_TEXT_LENGTH], int* isExit);
 void encrypt(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH], int shift);
-void display(char stringBuilder[MAX_TEXT_LENGTH]);
+void decrypt(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH], int shift);
+void display(char stringBuilder[MAX_TEXT_LENGTH], char ciphChoice, int isExit);
 void addToArray(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH]);
+void addToArrayOperations(int canExit, char stringBuilder[MAX_TEXT_LENGTH], char input[MAX_TEXT_LENGTH]);
 
 int findLength(char* str);
 
