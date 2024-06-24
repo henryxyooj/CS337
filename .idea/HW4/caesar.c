@@ -1,22 +1,38 @@
 #include "caesar.h"
 
-void display(char stringBuilder[MAX_TEXT_LENGTH]) {
-    printf("%s", stringBuilder);
+void display(char stringBuilder[MAX_TEXT_LENGTH], char ciphChoice, int isExit) {
+    switch (ciphChoice) {
+        case 'e':
+            printf("Encrypted text: %s\n", stringBuilder);
+            break;
+        case 'd':
+            printf("Decrypted text: %s\n", stringBuilder);
+            break;
+        default:
+            throwSupportedOperationsError(&isExit);
+    }
 }
 
-
 void addToArray(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH]) {
-    char comma[2] = ", ";
-    int length = findLength(stringBuilder);
+    char exitString[6] = ", h{lw";
+    int canExit = strcmp(input, exitString);
+    size_t len = strlen(input);
 
-    // base case of an empty stringbuilder
-    if (length == 0) {
-        strcat(stringBuilder, input);
+    if (input[len - 1] == '\n') {
+        input[len - 1] = '\0';
     }
-    else {
-        strcat(stringBuilder, comma);
-        strcat(stringBuilder, input);
+
+    // if user decides to exit right away and/or chooses to exit
+    if (canExit == 0) {
+        // do nothing
+        puts("exiting");
     }
+
+    // base case of no message in the empty stringBuilder
+    if (strlen(stringBuilder) != 0) {
+        strcat(stringBuilder, ", ");
+    }
+    strcat(stringBuilder, input);
 }
 
 void encrypt(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH], int shift) {
