@@ -2,6 +2,7 @@
 
 int main(int argc, char *argv[]) {
     char input[MAX_TEXT_LENGTH];
+    char stringBuilder[MAX_TEXT_LENGTH];
     char ciphChoice = (argv[1])[1];
     int isExit = 0;
     int shift = atoi(argv[2]);
@@ -33,9 +34,12 @@ int main(int argc, char *argv[]) {
             default:
                 throwSupportedOperationsError(&isExit);
         }
+
+        // store the operated message into an array
     }
 
     // display the results of the encrypted/decrypted messages
+    display(stringBuilder);
 
     return 0;
 }

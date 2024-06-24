@@ -1,8 +1,23 @@
 #include "caesar.h"
 
-void display(char input[MAX_TEXT_LENGTH]) {
-    for (unsigned long i = 0; i < (strlen(input) - 1); i++) {
-        printf("%c\t", input[i]);
+void display(char stringBuilder[MAX_TEXT_LENGTH]) {
+    for (unsigned long i = 0; i < (strlen(stringBuilder) - 1); i++) {
+        printf("%c\t", stringBuilder[i]);
+    }
+    puts("");
+}
+
+void addToArray(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH]) {
+    char comma[2] = ", ";
+    int length = findLength(stringBuilder);
+
+    // base case of an empty stringbuilder
+    if (length == 0) {
+        strcat(stringBuilder, input);
+    }
+    else {
+        strcat(stringBuilder, comma);
+        strcat(stringBuilder, input);
     }
 }
 
@@ -37,6 +52,16 @@ void getString(char ciphChoice, char input[MAX_TEXT_LENGTH], int* isExit) {
         *isExit = 1;
         return;
     }
+}
+
+int findLength(char* str) {
+    int i = 0;
+
+    while (str[i] != '\0') {
+        i++;
+    }
+
+    return i;
 }
 
 void throwInputMessageError(char input) {
