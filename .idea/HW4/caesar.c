@@ -18,8 +18,6 @@ void addToArray(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH]
     int canExit = strcmp(input, exitString);
     size_t len = strlen(input);
 
-    printf("input in addToArray: %s\ncanExit: %d\n", input, canExit);
-
     // when entering a message, to save it, a /n is created at the end, change it to null
     if (input[len - 1] == '\n') {
         input[len - 1] = '\0';
@@ -27,15 +25,15 @@ void addToArray(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH]
 
     // if user decides to exit right away and/or chooses to exit
     if (canExit == 10) {
-        // do nothing
-        puts("exiting");
+        return;
     }
 
-    // base case of no message in the empty stringBuilder
+    // if there's already something in stringBuilder, append it
     if (strlen(stringBuilder) != 0) {
         strcat(stringBuilder, ", ");
     }
 
+    // base case of no messages in the stringBuilder, then concatenate it with the current input
     strcat(stringBuilder, input);
 }
 
