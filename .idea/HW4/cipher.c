@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
         // switch case for either a encryption or decryption operation
         switch (ciphChoice) {
             case 'e':
-                encrypt(input, shift);
+                encrypt(input, stringBuilder, shift);
                 break;
             case 'd':
                 //decrypt();

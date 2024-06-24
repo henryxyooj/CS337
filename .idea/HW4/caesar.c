@@ -1,11 +1,9 @@
 #include "caesar.h"
 
 void display(char stringBuilder[MAX_TEXT_LENGTH]) {
-    for (unsigned long i = 0; i < (strlen(stringBuilder) - 1); i++) {
-        printf("%c\t", stringBuilder[i]);
-    }
-    puts("");
+    printf("%s", stringBuilder);
 }
+
 
 void addToArray(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH]) {
     char comma[2] = ", ";
@@ -21,7 +19,7 @@ void addToArray(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH]
     }
 }
 
-void encrypt(char input[MAX_TEXT_LENGTH], int shift) {
+void encrypt(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH], int shift) {
     // loop through every char in the string
     //      find the ascii value of each char, and add the shift to it
     //      otherwise it's a special character, and ignore it
@@ -30,6 +28,8 @@ void encrypt(char input[MAX_TEXT_LENGTH], int shift) {
             input[i] = input[i] + shift;
         }
     }
+
+    addToArray(input, stringBuilder);
 }
 
 void getString(char ciphChoice, char input[MAX_TEXT_LENGTH], int* isExit) {
