@@ -26,10 +26,10 @@ int main(int argc, char *argv[]) {
         // switch case for either a encryption or decryption operation
         switch (ciphChoice) {
             case 'e':
-                encrypt(input, stringBuilder, shift);
+                encrypt(input, stringBuilder, shift, ciphChoice);
                 break;
             case 'd':
-                decrypt(input, stringBuilder, shift);
+                decrypt(input, stringBuilder, shift, ciphChoice);
                 break;
             default:
                 throwSupportedOperationsError(&isExit);
