@@ -2,7 +2,7 @@
 
 int main(int argc, char *argv[]) {
     char input[MAX_TEXT_LENGTH];
-    char stringBuilder[MAX_TEXT_LENGTH];
+    char stringBuilder[MAX_TEXT_LENGTH] = "";
     char ciphChoice = (argv[1])[1];
     int isExit = 0;
     int shift = atoi(argv[2]);
@@ -22,14 +22,17 @@ int main(int argc, char *argv[]) {
     while (!isExit) {
         // get a string from the user
         getString(ciphChoice, input, &isExit);
+        if (isExit == 1) {
+            break;
+        }
 
         // switch case for either a encryption or decryption operation
         switch (ciphChoice) {
             case 'e':
-                encrypt(input, stringBuilder, shift, ciphChoice);
+                encrypt(input, stringBuilder, shift);
                 break;
             case 'd':
-                decrypt(input, stringBuilder, shift, ciphChoice);
+                decrypt(input, stringBuilder, shift);
                 break;
             default:
                 throwSupportedOperationsError(&isExit);

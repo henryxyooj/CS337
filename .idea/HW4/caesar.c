@@ -13,33 +13,12 @@ void display(char stringBuilder[MAX_TEXT_LENGTH], char ciphChoice, int isExit) {
     }
 }
 
-void addToArray(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH], char ciphChoice) {
-    int canExit;
+void addToArray(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH]) {
     size_t len = strlen(input);
 
     // when entering a message, to save it, a /n is created at the end, change it to null
     if (input[len - 1] == '\n') {
         input[len - 1] = '\0';
-    }
-
-    switch (ciphChoice) {
-        case 'e':
-            char exitStringEn[4] = "h{lw";
-            canExit = strcmp(input, exitStringEn);
-            addToArrayOperations(input, stringBuilder, canExit);
-            break;
-        case 'd':
-            char exitStringDe[4] = "bufq";
-            canExit = strcmp(input, exitStringDe);
-            addToArrayOperations(input, stringBuilder, canExit);
-            break;
-    }
-}
-
-void addToArrayOperations(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH], int canExit) {
-    // if user decides to exit right away and/or chooses to exit
-    if (canExit == 0) {
-        return;
     }
 
     // if there's already something in stringBuilder, append it
@@ -51,7 +30,7 @@ void addToArrayOperations(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TE
     strcat(stringBuilder, input);
 }
 
-void decrypt(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH], int shift, char ciphChoice) {
+void decrypt(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH], int shift) {
     // loop through every char in the string
     //      find the ascii value of each char, and add the shift to it
     //      otherwise it's a special character, and ignore it
@@ -61,10 +40,10 @@ void decrypt(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH], i
         }
     }
 
-    addToArray(input, stringBuilder, ciphChoice);
+    addToArray(input, stringBuilder);
 }
 
-void encrypt(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH], int shift, char ciphChoice) {
+void encrypt(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH], int shift) {
     // loop through every char in the string
     //      find the ascii value of each char, and add the shift to it
     //      otherwise it's a special character, and ignore it
@@ -74,7 +53,7 @@ void encrypt(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH], i
         }
     }
 
-    addToArray(input, stringBuilder, ciphChoice);
+    addToArray(input, stringBuilder);
 }
 
 void getString(char ciphChoice, char input[MAX_TEXT_LENGTH], int* isExit) {
