@@ -37,6 +37,19 @@ void addToArray(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH]
     strcat(stringBuilder, input);
 }
 
+void decrypt(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH], int shift) {
+    // loop through every char in the string
+    //      find the ascii value of each char, and add the shift to it
+    //      otherwise it's a special character, and ignore it
+    for (unsigned long i = 0; i < (strlen(input) - 1); i++) {
+        if ((input[i] >= 'a' && input[i] <= 'z') || (input[i] >= 'A' && input[i] <= 'Z')) {
+            input[i] = input[i] + shift;
+        }
+    }
+
+    addToArray(input, stringBuilder);
+}
+
 void encrypt(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH], int shift) {
     // loop through every char in the string
     //      find the ascii value of each char, and add the shift to it
