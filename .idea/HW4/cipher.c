@@ -15,14 +15,20 @@ int main(int argc, char *argv[]) {
     int shift = atoi(argv[2]);
 
     // throw any errors for incorrect input from user before asking for a string to decipher
-    if (argc != 3) {
-        // throw error for incorrect shift value
-        if ((atoi(argv[2])) < 0 && ((atoi(argv[2]) > 25))) {
-            puts("Invalid shift value");
-        }
-        // **throw error for encrypt/decrypt
-
+    if (argc != 3 || argc == 2 || argc > 3) {
         puts("Usage:\n\tTo encrypt: ./cipher -e <shift>\n\tTo decrypt: ./cipher -d <shift>");
+        return 1;
+    }
+
+    // throws an error message if the choice isn't -e or -d
+    if ((ciphChoice != 'e') && (ciphChoice != 'd')) {
+        throwSupportedOperationsError(0);
+        return 1;
+    }
+
+    // throws an error message if the choice isn't a number in between 0 and 25 inclusive
+    if ((shift < 0) || (shift > 25)) {
+        puts("Invalid shift value.\nUsage: <./cipher> <-d/-e> <0 <= 0 <= 25>");
         return 1;
     }
 
