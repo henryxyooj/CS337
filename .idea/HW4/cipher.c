@@ -15,7 +15,11 @@ int main(int argc, char *argv[]) {
     int shift = atoi(argv[2]);
 
     // throw any errors for incorrect input from user before asking for a string to decipher
-    if (argc != 3 || argc == 2 || argc > 3) {
+    if (argc != 3) {
+        if ((((strcmp(argv[0], "./cipher")) == 0) && ((strcmp(argv[1], "-e")) == 0)) ||
+        (((strcmp(argv[0], "./cipher")) == 0) && ((strcmp(argv[1], "-d")) == 0)))  {
+            return 1;
+        }
         puts("Usage:\n\tTo encrypt: ./cipher -e <shift>\n\tTo decrypt: ./cipher -d <shift>");
         return 1;
     }
@@ -32,6 +36,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    // throws an error message if the choice are non integer values
     if (shift == 0) {
         throwInvalidShiftValueError(shift, argv);
     }
