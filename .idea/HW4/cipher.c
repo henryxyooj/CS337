@@ -32,6 +32,10 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    if (shift == 0) {
+        throwInvalidShiftValueError(shift, argv);
+    }
+
     while (!isExit) {
         // get a string from the user, if it's "exit", end the loop
         getString(ciphChoice, input, &isExit);

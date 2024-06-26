@@ -117,6 +117,28 @@ void getString(char ciphChoice, char input[MAX_TEXT_LENGTH], int* isExit) {
 }
 
 /*******************************************************************
+* Description: throws an error message if the user inputs something that's not
+                an integer for the shift amount value
+*******************************************************************/
+void throwInvalidShiftValueError(int shift, char* argv[]) {
+    // when a string such as "abc" is inputted for the shift value, through
+    // atoi, it'll equal to 0.  To check if it's a valid integer, use argv[2] to compare
+    // with numerical strings to make sure user isn't inputting non integer values
+    for (long unsigned int i = 0; i < sizeof(shift); i++) {
+        if ((strcmp(argv[2], "0") == 0) || (strcmp(argv[2], "1") == 0) || (strcmp(argv[2], "2") == 0) ||
+        (strcmp(argv[2], "3") == 0) || (strcmp(argv[2], "4") == 0) || (strcmp(argv[2], "5") == 0) ||
+        (strcmp(argv[2], "6") == 0) || (strcmp(argv[2], "7") == 0) || (strcmp(argv[2], "8") == 0) ||
+        (strcmp(argv[2], "9") == 0)) {
+            // do nothing
+        }
+        else {
+            puts("Invalid shift value.\nUsage: <./cipher> <-d/-e> <0 <= 0 <= 25>");
+            exit(1);
+        }
+    }
+}
+
+/*******************************************************************
 * Description: throws an error message if the user doesn't type any messages
                 to get encoded/decoded.  Let's them know to enter a message
 *******************************************************************/

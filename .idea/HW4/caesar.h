@@ -17,5 +17,7 @@ void encrypt(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH], i
 void decrypt(char input[MAX_TEXT_LENGTH], char stringBuilder[MAX_TEXT_LENGTH], int shift);
 void display(char stringBuilder[MAX_TEXT_LENGTH], char ciphChoice, int isExit);
 
+
+void throwInvalidShiftValueError(int shift, char* argv[]);
 void throwInputMessageError(char input);
 void throwSupportedOperationsError(int* isExit);
