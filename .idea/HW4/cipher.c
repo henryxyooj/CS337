@@ -1,3 +1,10 @@
+/*******************************************************************
+* Author: Henry Xiong
+*
+* Description: driver file that shifts a certain number of places down or up the alphabet
+* Citations:
+*******************************************************************/
+
 #include "caesar.h"
 
 int main(int argc, char *argv[]) {
@@ -20,7 +27,7 @@ int main(int argc, char *argv[]) {
     }
 
     while (!isExit) {
-        // get a string from the user
+        // get a string from the user, if it's "exit", end the loop
         getString(ciphChoice, input, &isExit);
         if (isExit == 1) {
             break;
@@ -37,8 +44,6 @@ int main(int argc, char *argv[]) {
             default:
                 throwSupportedOperationsError(&isExit);
         }
-
-        // store the operated message into an array
     }
 
     // display the results of the encrypted/decrypted messages
