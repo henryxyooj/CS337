@@ -6,3 +6,10 @@
 #define MAX_PATTERN_CHARACTERS 10
 
 void grepLite(int argc, char *argv[]);
+void checkTerminalInputs(int argc, char *argv[]);
+
+void throwInvalidFilename(FILE *fptr, const char *filename);
+void throwInvalidPattern();
+void throwInvalidFileName();
+void throwOutOfRangeArguments();
+void throwOutOfRangePattern();
