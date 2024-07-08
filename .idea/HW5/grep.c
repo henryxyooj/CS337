@@ -1,3 +1,9 @@
+
+// citations:
+// https://www.tutorialspoint.com/c-program-to-convert-a-number-to-a-string
+// used to figure out how to convert an integer into a string, had an error with the strcat function
+// where it wasn't adding to my lineBuilder because it was of type int, so I couldn't append it
+
 #include "text.h"
 
 void grepLite(int argc, char *argv[]) {
@@ -5,6 +11,79 @@ void grepLite(int argc, char *argv[]) {
     int isLineNumber = 0;
 
     checkTerminalInputs(argc, argv, &isCaseInsensitive, &isLineNumber);
+
+    // open and read the file
+    const char *filename = argv[2];
+    FILE *fptr = fopen(filename, "r");
+    checkFile(fptr, filename);
+
+    // read through each line
+    char stringBuilder[MAX_CHARACTERS];
+    char lineBuilder[MAX_CHARACTERS];
+    char line[MAX_CHARACTERS];
+    int lineNumber = 0;
+
+    while (fgets(line, MAX_CHARACTERS, fptr)) {
+        if (isCaseInsensitive == 1) {
+            // lower all chars from the file
+            char lowerLine[MAX_CHARACTERS];
+            int indexLine = 0;
+            strcpy(lowerLine, line);
+            while (lowerLine[indexLine] != '0') {
+                if ((lowerLine[indexLine] >= 'A' && lowerLine[indexLine] <= 'Z')) {
+                    lowerLine[indexLine] = lowerLine[indexLine] + 32;
+                }
+                indexLine++;
+            }
+
+            // lower all chars from the terminal
+            char lowerPattern[MAX_CHARACTERS];
+            int indexPattern = 0;
+            strcpy(lowerPattern, line);
+            while (lowerPattern[indexPattern] != '0') {
+                if ((lowerPattern[indexPattern] >= 'A' && lowerPattern[indexPattern] <= 'Z')) {
+                    lowerPattern[indexPattern] = lowerPattern[indexPattern] + 32;
+                }
+                indexPattern++;
+            }
+
+            // use the substring to check if lowered pattern is inside of lowered line and if isLineNumber true or false
+            if (strstr(lowerLine, lowerPattern)) {
+                if (isLineNumber == 1) {
+                    char lineNumberToStrCase[MAX_CHARACTERS];
+                    sprintf(lineNumberToStrCase, "%d: ", lineNumber);
+                    strcat(stringBuilder, line);
+                    strcat(lineBuilder, lineNumberToStrCase);
+                }
+                else {
+                    strcat(stringBuilder, line);
+                }
+            }
+            else {
+                messageNoPatternFound();
+            }
+        }
+        else {  // not case insensitive and also check for if isLineNumber is valid too
+            if (strstr(line, argv[1])) {
+                if (isLineNumber == 1) {
+                    char lineNumberToStrNotCase[MAX_CHARACTERS];
+                    sprintf(lineNumberToStrNotCase, "%d: ", lineNumber);
+                    strcat(stringBuilder, line);
+                    strcat(lineBuilder, lineNumberToStrNotCase);
+                }
+                else {
+                    strcat(stringBuilder, line);
+                }
+            }
+            else {
+                messageNoPatternFound();
+            }
+        }
+
+        lineNumber++;
+    }
+
+    fclose(fptr);
 }
 
 void checkTerminalInputs(int argc, char *argv[], int *isCaseInsensitive, int *isLineNumber) {
@@ -27,6 +106,7 @@ void checkTerminalInputs(int argc, char *argv[], int *isCaseInsensitive, int *is
     const char *filename = argv[2];
     FILE *fptr = fopen(filename, "r");
     checkFile(fptr, filename);
+    fclose(fptr);
 
     // Are there any other optional flags used?
     switch (argc) {
@@ -62,6 +142,11 @@ void checkFile(FILE *fptr, const char *filename) {
         printf("Error: Failed to open %s\n", filename);
         exit(1);
     }
+}
+
+void messageNoPatternFound() {
+    printf("No matches are found.\n");
+    exit(1);
 }
 
 void throwInvalidFlag() {
