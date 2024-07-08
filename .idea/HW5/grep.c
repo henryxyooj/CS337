@@ -4,7 +4,7 @@ void grepLite(int argc, char *argv[]) {
     int isCaseInsensitive = 0;
     int isLineNumber = 0;
 
-    checkTerminalInputs(argc, argv, isCaseInsensitive, isLineNumber);
+    checkTerminalInputs(argc, argv, &isCaseInsensitive, &isLineNumber);
 }
 
 void checkTerminalInputs(int argc, char *argv[], int *isCaseInsensitive, int *isLineNumber) {
@@ -31,32 +31,35 @@ void checkTerminalInputs(int argc, char *argv[], int *isCaseInsensitive, int *is
     // Are there any other optional flags used?
     switch (argc) {
         case 4:
-            if (strcmp((argv[3])[1], 'i') == 1) {
+            if ((argv[3])[1] == 'i') {
                 *isCaseInsensitive = 1;
             }
-            else if ((strcmp((argv[3])[1], 'n') == 1)) {
+            else if ((argv[3])[1] == 'n') {
                 *isLineNumber = 1;
+            }
+            else {
+                throwInvalidFlag();
             }
             break;
         case 5:
-            if ((strcmp((argv[3])[1], 'i') == 1) && (strcmp((argv[4])[1], 'n') == 1)) {
+            if ((argv[3])[1] == 'i' && (argv[4])[1] == 'n') {
                 *isCaseInsensitive = 1;
                 *isLineNumber = 1;
             }
-            else if ((strcmp((argv[3])[1], 'n') == 1) && (strcmp((argv[4])[1], 'i') == 1)) {
+            else if ((argv[3])[1] == 'n' && (argv[4])[1] == 'i') {
                 *isCaseInsensitive = 1;
                 *isLineNumber = 1;
             }
-            break;
-        default:
-            throwInvalidFlag();
+            else {
+                throwInvalidFlag();
+            }
             break;
     }
 }
 
 void checkFile(FILE *fptr, const char *filename) {
     if (fptr == NULL) {
-        printf("Failed to open %s\n", filename);
+        printf("Error: Failed to open %s\n", filename);
         exit(1);
     }
 }
