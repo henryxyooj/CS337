@@ -1,41 +1,69 @@
 #include "text.h"
 
 void grepLite(int argc, char *argv[]) {
-    checkTerminalInputs(argc, argv);
+    int isCaseInsensitive = 0;
+    int isLineNumber = 0;
+
+    checkTerminalInputs(argc, argv, isCaseInsensitive, isLineNumber);
 }
 
-void checkTerminalInputs(int argc, char *argv[]) {
+void checkTerminalInputs(int argc, char *argv[], int *isCaseInsensitive, int *isLineNumber) {
     // Is the amount of arguments from terminal valid? At least is 3 and at most is 5.
     if (argc < 3 || argc > 5) {
         throwOutOfRangeArguments();
     }
 
-    // Is the pattern a valid pattern?
-    unsigned int index = 0;
-    while (argv[index] != "\0") {
+    // Is the pattern within MAX_PATTERN_CHARACTERS?
+    int index = 0;
+    while ((argv[1])[index] != '\0') {
         index++;
     }
 
-    if (index > MAX_PATTERN_CHARACTERS) {
+    if (index > MAX_PATTERN_CHARACTERS || index < 0) {
         throwOutOfRangePattern();
     }
 
     // Were there any errors finding the file's name?  Does it include the .txt extension or is it NULL?
     const char *filename = argv[2];
     FILE *fptr = fopen(filename, "r");
-    throwInvalidFileName(fptr, filename);
-
-
+    checkFile(fptr, filename);
 
     // Are there any other optional flags used?
-
+    switch (argc) {
+        case 4:
+            if (strcmp((argv[3])[1], 'i') == 1) {
+                *isCaseInsensitive = 1;
+            }
+            else if ((strcmp((argv[3])[1], 'n') == 1)) {
+                *isLineNumber = 1;
+            }
+            break;
+        case 5:
+            if ((strcmp((argv[3])[1], 'i') == 1) && (strcmp((argv[4])[1], 'n') == 1)) {
+                *isCaseInsensitive = 1;
+                *isLineNumber = 1;
+            }
+            else if ((strcmp((argv[3])[1], 'n') == 1) && (strcmp((argv[4])[1], 'i') == 1)) {
+                *isCaseInsensitive = 1;
+                *isLineNumber = 1;
+            }
+            break;
+        default:
+            throwInvalidFlag();
+            break;
+    }
 }
 
-void throwInvalidFilename(FILE *fptr, const char *filename) {
+void checkFile(FILE *fptr, const char *filename) {
     if (fptr == NULL) {
         printf("Failed to open %s\n", filename);
         exit(1);
     }
+}
+
+void throwInvalidFlag() {
+    printf("Usage: ./main <pattern> <filename> with optional [-i] for case insensitive search, [-n] for line number\n");
+    exit(1);
 }
 
 void throwInvalidPattern() {
