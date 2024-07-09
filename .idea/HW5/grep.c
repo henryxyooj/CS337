@@ -9,6 +9,7 @@
 void grepLite(int argc, char *argv[]) {
     int isCaseInsensitive = 0;
     int isLineNumber = 0;
+    int isMatched = 0;
 
     checkTerminalInputs(argc, argv, &isCaseInsensitive, &isLineNumber);
 
@@ -29,7 +30,8 @@ void grepLite(int argc, char *argv[]) {
             char lowerLine[MAX_CHARACTERS];
             int indexLine = 0;
             strcpy(lowerLine, line);
-            while (lowerLine[indexLine] != '0') {
+            line[strlen(line) - 1] = '\0';
+            while (lowerLine[indexLine] != '\0') {
                 if ((lowerLine[indexLine] >= 'A' && lowerLine[indexLine] <= 'Z')) {
                     lowerLine[indexLine] = lowerLine[indexLine] + 32;
                 }
@@ -40,7 +42,7 @@ void grepLite(int argc, char *argv[]) {
             char lowerPattern[MAX_CHARACTERS];
             int indexPattern = 0;
             strcpy(lowerPattern, line);
-            while (lowerPattern[indexPattern] != '0') {
+            while (lowerPattern[indexPattern] != '\0') {
                 if ((lowerPattern[indexPattern] >= 'A' && lowerPattern[indexPattern] <= 'Z')) {
                     lowerPattern[indexPattern] = lowerPattern[indexPattern] + 32;
                 }
@@ -49,9 +51,10 @@ void grepLite(int argc, char *argv[]) {
 
             // use the substring to check if lowered pattern is inside of lowered line and if isLineNumber true or false
             if (strstr(lowerLine, lowerPattern)) {
+                isMatched = 1;
                 if (isLineNumber == 1) {
                     char lineNumberToStrCase[MAX_CHARACTERS];
-                    sprintf(lineNumberToStrCase, "%d: ", lineNumber);
+                    sprintf(lineNumberToStrCase, "%d: ", (lineNumber + 1));
                     strcat(stringBuilder, line);
                     strcat(lineBuilder, lineNumberToStrCase);
                 }
@@ -59,15 +62,13 @@ void grepLite(int argc, char *argv[]) {
                     strcat(stringBuilder, line);
                 }
             }
-            else {
-                messageNoPatternFound();
-            }
         }
         else {  // not case insensitive and also check for if isLineNumber is valid too
             if (strstr(line, argv[1])) {
+                isMatched = 1;
                 if (isLineNumber == 1) {
                     char lineNumberToStrNotCase[MAX_CHARACTERS];
-                    sprintf(lineNumberToStrNotCase, "%d: ", lineNumber);
+                    sprintf(lineNumberToStrNotCase, "%d: ", (lineNumber + 1));
                     strcat(stringBuilder, line);
                     strcat(lineBuilder, lineNumberToStrNotCase);
                 }
@@ -75,13 +76,17 @@ void grepLite(int argc, char *argv[]) {
                     strcat(stringBuilder, line);
                 }
             }
-            else {
-                messageNoPatternFound();
-            }
         }
 
         lineNumber++;
     }
+
+    if (isMatched == 0) {
+        messageNoPatternFound();
+    }
+
+    printf("%s\n", stringBuilder);
+    printf("%s\n", lineBuilder);
 
     fclose(fptr);
 }

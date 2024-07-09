@@ -11,6 +11,7 @@ void checkTerminalInputs(int argc, char *argv[], int *isCaseInsensitive, int *is
 void checkFile(FILE *fptr, const char *filename);
 
 void messageNoPatternFound();
+void displayResults(char stringBuilder, char lineBuilder);
 
 void throwInvalidFlag();
 void throwInvalidFilename(FILE *fptr, const char *filename);
