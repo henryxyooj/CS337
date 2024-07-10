@@ -7,15 +7,18 @@
 
 void grepLite(int argc, char *argv[]);
 
-void checkTerminalInputs(int argc, char *argv[], int *isCaseInsensitive, int *isLineNumber);
+void checkTerminalInputs(int argc, char *argv[], int *isCaseInsensitive, int *isLineNumber, int *isWriteToFile);
 void checkFile(FILE *fptr, const char *filename);
+void checkFlag(int argc, char *argv[], int *isCaseInsensitive, int *isLineNumber, int *isWriteToFile);
 
 void toLowerCase(char *str);
 
 void messageNoPatternFound();
+void messageToChoice(int isWriteToFile, char stringBuilder[], char *argv[], int isMatched);
 
 void throwInvalidFlag();
 void throwInvalidFilename(FILE *fptr, const char *filename);
+void throwInvalidOutputFileName();
 void throwInvalidPattern();
 void throwInvalidFileName();
 void throwOutOfRangeArguments();

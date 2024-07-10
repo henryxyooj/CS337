@@ -82,6 +82,9 @@ void checkTerminalInputs(int argc, char *argv[], int *isCaseInsensitive, int *is
     // Is the amount of arguments from terminal valid? At least is 3 and at most is 7.
     if (argc < 3 || argc > 7) {
         throwOutOfRangeArguments();
+        if (argc == 6) {
+            throwInvalidOutputFileName();
+        }
     }
 
     // Is the pattern within MAX_PATTERN_CHARACTERS?
@@ -138,13 +141,13 @@ void checkFlag(int argc, char *argv[], int *isCaseInsensitive, int *isLineNumber
             }
             break;
         case 6:
-            if ((argv[3])[1] == 'i' && (argv[4])[1] == 'n' && (argv[5])[0] == '<') {
+            if ((argv[3])[1] == 'i' && (argv[4])[1] == 'n' && (argv[5])[0] == '>') {
                 *isCaseInsensitive = 1;
                 *isLineNumber = 1;
 
                 throwInvalidOutputFileName();
             }
-            else if ((argv[3])[1] == 'n' && (argv[4])[1] == 'i' && (argv[5])[0] == '<') {
+            else if ((argv[3])[1] == 'n' && (argv[4])[1] == 'i' && (argv[5])[0] == '>') {
                 *isCaseInsensitive = 1;
                 *isLineNumber = 1;
 
@@ -155,7 +158,7 @@ void checkFlag(int argc, char *argv[], int *isCaseInsensitive, int *isLineNumber
             }
             break;
         case 7:
-            if ((argv[3])[1] == 'i' && (argv[4])[1] == 'n' && (argv[5])[0] == '<') {
+            if ((argv[3])[1] == 'i' && (argv[4])[1] == 'n' && (argv[5])[0] == '>') {
                 *isCaseInsensitive = 1;
                 *isLineNumber = 1;
 
@@ -165,7 +168,7 @@ void checkFlag(int argc, char *argv[], int *isCaseInsensitive, int *isLineNumber
                 fclose(foptr);
                 *isWriteToFile = 1;
             }
-            else if ((argv[3])[1] == 'n' && (argv[4])[1] == 'i' && (argv[5])[0] == '<') {
+            else if ((argv[3])[1] == 'n' && (argv[4])[1] == 'i' && (argv[5])[0] == '>') {
                 *isCaseInsensitive = 1;
                 *isLineNumber = 1;
 
@@ -203,24 +206,15 @@ void messageToChoice(int isWriteToFile, char stringBuilder[], char *argv[], int 
         FILE *foptr = fopen(fileout, "w");
         checkFile(foptr, fileout);
 
-        char line[MAX_CHARACTERS];
-        while (fgets(line, MAX_CHARACTERS, foptr)) {
-            if (isMatched == 0) {
-                fputs(line, foptr);
-                messageNoPatternFound();
-            }
-            else {
-                fputs(line, foptr);
-            }
-        }
-
+        fprintf(foptr, "%s", stringBuilder);
         fclose(foptr);
     }
-
-    if (isMatched == 0) {
-        messageNoPatternFound();
+    else {
+        if (isMatched == 0) {
+            messageNoPatternFound();
+        }
+        printf("%s", stringBuilder);
     }
-    printf("%s", stringBuilder);
 }
 
 void throwInvalidFlag() {
@@ -250,6 +244,7 @@ void throwInvalidOutputFileName() {
     printf("Usage: ./main <pattern> <filename> <-i/-n> <-i/-n> [<] <fileout>\n");
     printf("Usage: Both <-i/-n> are optional, [-i] for case insensitive search and [-n] for line number.\n");
     printf("Usage: When using \"<\", type in a new file name to write in <fileout>.\n");
+    printf("Error: Invalid output file name.\n");
     exit(1);
 }
 
