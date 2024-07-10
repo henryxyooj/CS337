@@ -25,20 +25,22 @@ void grepLite(int argc, char *argv[]) {
 
     // read through each line from the text file
     while (fgets(line, MAX_CHARACTERS, fptr)) {
+        char lineOriginal[MAX_CHARACTERS];
+        strcpy(lineOriginal, line);
         // when reading from a text file, the last character of the line is '\n'
         if (line[strlen(line) - 1] == '\n') {
             line[strlen(line) - 1] = '\0';
         }
 
         if (isCaseInsensitive == 1) {
-            // copies the original line into another variable
+            // copies the pattern from the text file into another variable
             char lowerLine[MAX_CHARACTERS];
-            strcpy(lowerLine, line);
+            strcpy(lowerLine, lineOriginal);
             toLowerCase(lowerLine);
 
             // copies the pattern from terminal into another variable
             char lowerPattern[MAX_CHARACTERS];
-            strcpy(lowerPattern, line);
+            strcpy(lowerPattern, argv[1]);
             toLowerCase(lowerPattern);
 
             // use the substring to check if lowered pattern is inside of lowered line and if isLineNumber true or false
@@ -50,7 +52,7 @@ void grepLite(int argc, char *argv[]) {
                     sprintf(lineNumberToStrCase, "%d ", (lineNumber + 1));
                     strcat(stringBuilder, lineNumberToStrCase);
                 }
-                strcat(stringBuilder, line);
+                strcat(stringBuilder, lineOriginal);
                 strcat(stringBuilder, "\n");
             }
         }
