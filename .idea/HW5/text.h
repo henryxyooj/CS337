@@ -1,3 +1,11 @@
+/*******************************************************************
+* Author: Henry Xiong
+
+* Description:
+* Contains all of the prototype functions, header files, and important
+* final variables used for grep.c
+*******************************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

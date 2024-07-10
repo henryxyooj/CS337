@@ -1,11 +1,21 @@
+/*******************************************************************
+* Author: Henry Xiong
 
-// citations:
-// https://www.tutorialspoint.com/c-program-to-convert-a-number-to-a-string
-// used to figure out how to convert an integer into a string, had an error with the strcat function
-// where it wasn't adding to my lineBuilder because it was of type int, so I couldn't append it
+* Description:
+* This C file contains the functions that simulates the behavior of limited 'grep' commands.
+
+* Citations:
+* https://www.tutorialspoint.com/c-program-to-convert-a-number-to-a-string
+* used to figure out how to convert an integer into a string, had an error with the strcat function
+* where it wasn't adding to my lineBuilder because it was of type int, so I couldn't append it
+*******************************************************************/
 
 #include "text.h"
 
+/*******************************************************************
+* Description: Searches for the pattern given from terminal to the requested
+                file
+*******************************************************************/
 void grepLite(int argc, char *argv[]) {
     int isCaseInsensitive = 0;
     int isLineNumber = 0;
@@ -78,9 +88,12 @@ void grepLite(int argc, char *argv[]) {
     messageToChoice(isWriteToFile, stringBuilder, argv, isMatched);
 }
 
+/*******************************************************************
+* Description: Checks and throws any errors when getting terminal inpuit
+*******************************************************************/
 void checkTerminalInputs(int argc, char *argv[], int *isCaseInsensitive, int *isLineNumber, int *isWriteToFile) {
     // Is the amount of arguments from terminal valid? At least is 3 and at most is 7.
-    if (argc < 3 || argc > 7) {
+    if (argc < 3 || argc > 8) {
         throwOutOfRangeArguments();
         if (argc == 6) {
             throwInvalidOutputFileName();
@@ -107,6 +120,9 @@ void checkTerminalInputs(int argc, char *argv[], int *isCaseInsensitive, int *is
     checkFlag(argc, argv, isCaseInsensitive, isLineNumber, isWriteToFile);
 }
 
+/*******************************************************************
+* Description: When opening a file, check to see if it's a valid file to be used
+*******************************************************************/
 void checkFile(FILE *fptr, const char *filename) {
     if (fptr == NULL) {
         printf("Error: Failed to open %s\n", filename);
@@ -114,7 +130,12 @@ void checkFile(FILE *fptr, const char *filename) {
     }
 }
 
+/*******************************************************************
+* Description: When a user inputs the optional flags in the terminal, look through
+*               each argc to see if what conditions were placed from the user
+*******************************************************************/
 void checkFlag(int argc, char *argv[], int *isCaseInsensitive, int *isLineNumber, int *isWriteToFile) {
+    // depending on the amount of arguments, argc, check each position of them to see what we're working with
     switch (argc) {
         case 4:
             if ((argv[3])[1] == 'i') {
@@ -140,7 +161,7 @@ void checkFlag(int argc, char *argv[], int *isCaseInsensitive, int *isLineNumber
                 throwInvalidFlag();
             }
             break;
-        case 6:
+        case 6: // automatically throw an error because although you can have 6 because it's less than 7, the output file name is incorrect
             if ((argv[3])[1] == 'i' && (argv[4])[1] == 'n' && (argv[5])[0] == '>') {
                 *isCaseInsensitive = 1;
                 *isLineNumber = 1;
@@ -185,6 +206,9 @@ void checkFlag(int argc, char *argv[], int *isCaseInsensitive, int *isLineNumber
     }
 }
 
+/*******************************************************************
+* Description: Uses ASCII to lower any capitalized letter from a string
+*******************************************************************/
 void toLowerCase(char *str) {
     int i = 0;
     while (str[i] != '\0') {
@@ -195,11 +219,18 @@ void toLowerCase(char *str) {
     }
 }
 
+
+/*******************************************************************
+* Description: displays whether or not if the pattern exists or not within the text file
+*******************************************************************/
 void messageNoPatternFound() {
     printf("No matches are found.\n");
     exit(1);
 }
 
+/*******************************************************************
+* Description: displays the results, depending on what the user requested
+*******************************************************************/
 void messageToChoice(int isWriteToFile, char stringBuilder[], char *argv[], int isMatched) {
     if (isWriteToFile == 1) {
         const char *fileout = argv[6];
@@ -217,6 +248,9 @@ void messageToChoice(int isWriteToFile, char stringBuilder[], char *argv[], int 
     }
 }
 
+/*******************************************************************
+* Description: throws an error if there's something wrong with the flags used in the terminal
+*******************************************************************/
 void throwInvalidFlag() {
     printf("Usage: ./main <pattern> <filename> <-i/-n> <-i/-n> [<] <fileout>\n");
     printf("Usage: Both <-i/-n> are optional, [-i] for case insensitive search and [-n] for line number.\n");
@@ -224,6 +258,9 @@ void throwInvalidFlag() {
     exit(1);
 }
 
+/*******************************************************************
+* Description: throws an error if the pattern is not a single word
+*******************************************************************/
 void throwInvalidPattern() {
     printf("Usage: ./main <pattern> <filename> <-i/-n> <-i/-n> [<] <fileout>\n");
     printf("Usage: Both <-i/-n> are optional, [-i] for case insensitive search and [-n] for line number.\n");
@@ -232,6 +269,9 @@ void throwInvalidPattern() {
     exit(1);
 }
 
+/*******************************************************************
+* Description: throws an error if the user didn't specify the extension type
+*******************************************************************/
 void throwInvalidFileName() {
     printf("Usage: ./main <pattern> <filename> <-i/-n> <-i/-n> [<] <fileout>\n");
     printf("Usage: Both <-i/-n> are optional, [-i] for case insensitive search and [-n] for line number.\n");
@@ -240,6 +280,9 @@ void throwInvalidFileName() {
     exit(1);
 }
 
+/*******************************************************************
+* Description: throws an error if the user didn't enter .txt file extension for an output file
+*******************************************************************/
 void throwInvalidOutputFileName() {
     printf("Usage: ./main <pattern> <filename> <-i/-n> <-i/-n> [<] <fileout>\n");
     printf("Usage: Both <-i/-n> are optional, [-i] for case insensitive search and [-n] for line number.\n");
@@ -248,6 +291,9 @@ void throwInvalidOutputFileName() {
     exit(1);
 }
 
+/*******************************************************************
+* Description: throws an error if the user enters more or not enough arguments within the terminal
+*******************************************************************/
 void throwOutOfRangeArguments() {
     printf("Usage: ./main <pattern> <filename> <-i/-n> <-i/-n> [<] <fileout>\n");
     printf("Usage: Both <-i/-n> are optional, [-i] for case insensitive search and [-n] for line number.\n");
@@ -256,6 +302,9 @@ void throwOutOfRangeArguments() {
     exit(1);
 }
 
+/*******************************************************************
+* Description: throws an error if the user entered a pattern longer than 10 characters
+*******************************************************************/
 void throwOutOfRangePattern() {
     printf("Usage: Pattern can only be 10 characters long.\n");
     exit(1);
