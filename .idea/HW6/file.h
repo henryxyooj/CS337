@@ -10,3 +10,5 @@
 #include <time.h>
 
 void lsExtended(int argc, char *argv[]);
+
+void checkFlags(int argc, char *argv[]);
