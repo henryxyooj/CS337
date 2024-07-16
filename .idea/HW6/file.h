@@ -13,6 +13,7 @@
 
 void lsExtended(int argc, char *argv[]);
 
-void checkFlags(int argc, char *argv[], int *isAllFiles, int *isVisibleFilesInDirectory, int *isAllFilesInDirectory, char path[PATH_SIZE]);
+void checkFlags(int argc, char *argv[], int *isAllFiles, int *isVisibleFiles, char path[PATH_SIZE]);
+void getFiles(char path[PATH_SIZE], int isAllFiles, int isVisibleFiles);
 
 void throwInvalidFlag();
