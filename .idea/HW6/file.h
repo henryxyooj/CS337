@@ -9,6 +9,10 @@
 #include <grp.h>
 #include <time.h>
 
+#define PATH_SIZE 1024
+
 void lsExtended(int argc, char *argv[]);
 
-void checkFlags(int argc, char *argv[]);
+void checkFlags(int argc, char *argv[], int *isAllFiles, int *isVisibleFilesInDirectory, int *isAllFilesInDirectory, char path[PATH_SIZE]);
+
+void throwInvalidFlag();
