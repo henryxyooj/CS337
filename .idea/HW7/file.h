@@ -7,3 +7,7 @@
 #include <dirent.h>
 
 void grepPlus(int argc, char *argv[]);
+
+void throwOutOfBoundsTerminalInputs();
+void throwOutOfBoundsPattern();
+void throwInvalidDirectory();
