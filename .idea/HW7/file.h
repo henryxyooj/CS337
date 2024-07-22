@@ -19,4 +19,3 @@ void throwOutOfBoundsTerminalInputs();
 void throwOutOfBoundsPattern();
 void throwInvalidDirectory(char dir[BUFFER_SIZE]);
 void throwInvalidFlagOption();
-void throwInvalidGrepCommand();

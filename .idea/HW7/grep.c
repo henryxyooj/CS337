@@ -7,8 +7,22 @@ void grepPlus(int argc, char *argv[]) {
 
     checkTerminalInputs(argc, argv, &isCase, &isLines, path);
 
-    // create child and parent processes
-        // a maximum of 5 files can be searched
+    DIR *dir = opendir(path);
+    if (dir == NULL) {
+        throwInvalidDirectory(dir);
+    }
+
+    struct dirent *entry;
+    char pattern[BUFFER_SIZE];
+    strcpy(pattern, argv[3]);
+    int fileCount = 0;
+    pid_t pids[MAX_FILES];
+
+    while ((entry = readdir(dir)) != NULL) {
+
+    }
+
+    closedir(dir);
 
     // display the results
 }
@@ -19,10 +33,6 @@ void grepPlus(int argc, char *argv[]) {
     // check to see how many arguments there are
     if (argc > 7 || argc < 0) {
         throwOutOfBoundsTerminalInputs();
-    }
-
-    if ((strcmp(argv[1], "grep") != 0) && (strlen(argv[1]) != 4)) {
-        throwInvalidGrepCommand();
     }
 
     // is the dir input valid?
@@ -36,7 +46,6 @@ void grepPlus(int argc, char *argv[]) {
         throwInvalidDirectory(dir);
     }
     else {
-        printf("contains . or ./\n");
         path = dir;
     }
 
