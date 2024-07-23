@@ -19,6 +19,8 @@ void grepPlus(int argc, char *argv[]) {
     pid_t pids[MAX_FILES];
     int fileCount = 0, pidIndex = 0;
 
+    // use the parent process to print out the result***
+
     while ((entry = readdir(dir)) != NULL) {
         // check each entry to see if they're a text file
         // if it is a text file, increment the file count and check with MAX_FILES
@@ -32,22 +34,32 @@ void grepPlus(int argc, char *argv[]) {
             }
 
             pids[pidIndex] = fork();
-            if (pids[pidIndex] == 0) {
-                // do the actual text file opening and searching for the pattern here
-            }
-            else if (pids[pidIndex] < 0 ) {
+            if (pids[pidIndex] < 0) {
                 throwErrorForking();
             }
+
+            if (pids[pidIndex] == 0) {  // in child process
+                return;
+            }
+            else {  // in parent process
+
+            }
+
             pidIndex++;
         }
     }
 
+    printf("Child process PIDS: ");
     for (int i = 0; i < pidIndex; i++) {
+        printf("%d ", getpid());
         waitpid(pids[i], NULL, 0);
     }
 
+    fflush(stdout);
+
     printf("\nNumber of files searched: %d\n", fileCount);
     printf("Number of processes created: %d\n", pidIndex);
+
     closedir(dir);
 }
 
