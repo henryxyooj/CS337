@@ -29,9 +29,3 @@ void throwInvalidFlagOption() {
     puts("Usage: Case insensitive = [-i]\t Print line numbers = [-n]");
     exit(1);
 }
-
-void throwInvalidGrepCommand() {
-    puts("Error: Grep wasn't used correctly.");
-    puts("Usage: [./main] [grep] [directory] [pattern] [optional flag: -i or -n] [optional flag: -i or -n]");
-    exit(1);
-}
