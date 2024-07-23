@@ -16,20 +16,39 @@ void grepPlus(int argc, char *argv[]) {
     struct dirent *entry;
     char pattern[BUFFER_SIZE];
     strcpy(pattern, argv[3]);
-    //pid_t pids[MAX_FILES];
+    pid_t pids[MAX_FILES];
+    int fileCount = 0, pidIndex = 0;
 
     while ((entry = readdir(dir)) != NULL) {
         // check each entry to see if they're a text file
         // if it is a text file, increment the file count and check with MAX_FILES
         // create a pid and also a pid counter to display the amount of processes that was created
-        if (strstr(entry->d_name, ".txt")) {
-            printf("%s\n", entry->d_name);
+        if (strstr(entry->d_name, ".txt")) {    // currently looking at .txt files
+            fileCount++;
+
+            // max process is 5 only, break out of the loop if over capacity
+            if (fileCount > MAX_FILES) {
+                break;
+            }
+
+            pids[pidIndex] = fork();
+            if (pids[pidIndex] == 0) {
+                // do the actual text file opening and searching for the pattern here
+            }
+            else if (pids[pidIndex] < 0 ) {
+                throwErrorForking();
+            }
+            pidIndex++;
         }
     }
 
-    closedir(dir);
+    for (int i = 0; i < pidIndex; i++) {
+        waitpid(pids[i], NULL, 0);
+    }
 
-    // display the results
+    printf("\nNumber of files searched: %d\n", fileCount);
+    printf("Number of processes created: %d\n", pidIndex);
+    closedir(dir);
 }
 
 

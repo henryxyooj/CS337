@@ -29,3 +29,8 @@ void throwInvalidFlagOption() {
     puts("Usage: Case insensitive = [-i]\t Print line numbers = [-n]");
     exit(1);
 }
+
+void throwErrorForking() {
+    printf("Error: Forking failed.\nUsage: Try running grep again.\n");
+    exit(1);
+}
