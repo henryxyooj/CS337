@@ -14,12 +14,12 @@ void grepPlus(int argc, char *argv[]) {
     }
 
     struct dirent *entry;
-    char pattern[BUFFER_SIZE];
-    strcpy(pattern, argv[3]);
     pid_t pids[MAX_FILES];
+    char pattern[BUFFER_SIZE];
+    char specPath[BUFFER_SIZE];
     int fileCount = 0, pidIndex = 0;
 
-    // use the parent process to print out the result***
+    strcpy(pattern, argv[3]);
 
     while ((entry = readdir(dir)) != NULL) {
         // check each entry to see if they're a text file
@@ -39,26 +39,36 @@ void grepPlus(int argc, char *argv[]) {
             }
 
             if (pids[pidIndex] == 0) {  // in child process
-                return;
+                strcat(specPath, path);
+                strcat(specPath, "/");
+                strcat(specPath, entry->d_name);
+
+                char *grepArgs[] = {"grep", specPath, pattern};
+
+                execvp("grep", grepArgs);
+                perror("execvp");
+                exit(1);
             }
-            else {  // in parent process
+            else {  // parent
 
             }
 
             pidIndex++;
         }
     }
+        for (int i = 0; i < pidIndex; i++) {
+            waitpid(pids[i], NULL, 0);
+        }
 
-    printf("Child process PIDS: ");
-    for (int i = 0; i < pidIndex; i++) {
-        printf("%d ", getpid());
-        waitpid(pids[i], NULL, 0);
-    }
+        fflush(stdout);
 
-    fflush(stdout);
+        printf("Child process PIDs: ");
+        for (int i = 0; i < pidIndex; i++) {
+            printf("%d ", pids[i]);
+        }
 
-    printf("\nNumber of files searched: %d\n", fileCount);
-    printf("Number of processes created: %d\n", pidIndex);
+        printf("\nNumber of files searched: %d\n", fileCount);
+        printf("Number of processes created: %d\n", pidIndex);
 
     closedir(dir);
 }
@@ -72,7 +82,7 @@ void grepPlus(int argc, char *argv[]) {
     }
 
     // is the dir input valid?
-    // stores the directory string into variable dir, then checks the base case of it not being "." for some reason
+    // stores the directory string into variable dir, then checks the base case of it not being "."
     char dir[BUFFER_SIZE];
     strcpy(dir, argv[2]);
     if (dir[0] != '.') {
