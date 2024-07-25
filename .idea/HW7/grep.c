@@ -43,14 +43,17 @@ void grepPlus(int argc, char *argv[]) {
                 strcat(specPath, "/");
                 strcat(specPath, entry->d_name);
 
-                char *grepArgs[] = {"grep", specPath, pattern};
+                char *grepArgs[] = {"grep", specPath, pattern, NULL, NULL, NULL};
+                if (isLines == 1) {
+                    grepArgs[3] = "-n";
+                }
+                if (isCase == 1) {
+                    grepArgs[4] = "-i";
+                }
 
                 execvp("grep", grepArgs);
                 perror("execvp");
                 exit(1);
-            }
-            else {  // parent
-
             }
 
             pidIndex++;
