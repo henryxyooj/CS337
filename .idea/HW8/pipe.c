@@ -1,17 +1,29 @@
 #include "file.h"
 #include "throws.c"
 
-void checkTerminal(int argc, char *argv[]);
+#define MAX_CHAR 1024
+
+void checkTerminal(int argc, char *argv[], int *isWc, int *isSort, int *isNumOfLines, int *isWordCount, int *isNumOfBytes);
 void checkTerminalArguments(int argc);
+void checkTerminalPipe(char *argv[]);
+void checkTerminalCommand(int *isWc, int *isSort, char *argv[], int *isNumOfLines, int *isWordCount, int *isNumOfBytes);
+void checkTerminalCommandFlag(char *argv[], int *isNumOfLines, int *isWordCount, int *isNumOfBytes);
+void checkTerminalFilename(char *argv[]);
+
 void checkProcess(pid_t process);
 
 void pipe_commands(int argc, char *argv[]) {
+    int isWc = 0, isSort = 0;
+    int isNumOfLines = 0, isWordCount = 0, isNumOfBytes = 0;
+
     // check user input
-    checkTerminal(argc, argv);
+    checkTerminal(argc, argv, &isWc, &isSort, &isNumOfLines, &isWordCount, &isNumOfBytes);
 
     // create a pipe for process communication
     int fd[2];
-    checkPipe(fd);
+    if (pipe(fd) == -1) {
+        throwPipeError();
+    }
 
     // create two child processes
     pid_t c1pid = fork();
@@ -26,62 +38,76 @@ void pipe_commands(int argc, char *argv[]) {
     // use the execvp function to execute each of the commands in each child passing necessary flags
         // call for wc and sort, handled with dup, use it before execvp
 
+    close(fd[0]);
+    close(fd[1]);
+    wait(NULL);
+    wait(NULL);
 }
 
-void checkTerminal(int argc, char *argv[]) {
+void checkTerminal(int argc, char *argv[], int *isWc, int *isSort, int *isNumOfLines, int *isWordCount, int *isNumOfBytes) {
     checkTerminalArguments(argc);
+    checkTerminalFilename(argv);
+    checkTerminalPipe(argv);
+    checkTerminalCommand(isWc, isSort, argv, isNumOfLines, isWordCount, isNumOfBytes);
+}
 
-    // is the dir input valid?
-    // stores the directory string into variable dir, then checks the base case of it not being "."
-    char dir[BUFFER_SIZE];
-    strcpy(dir, argv[2]);
-    if (dir[0] != '.') {
-        throwInvalidDirectory(dir);
+void checkTerminalCommandFlag(char *argv[], int *isNumOfLines, int *isWordCount, int *isNumOfBytes) {
+    char flag[MAX_CHAR];
+    strcpy(flag, argv[5]);
+
+    if (strcmp(flag, "-l") == 0) {  // number of lines
+        *isNumOfLines = 1;
     }
-    else if (dir[0] != '.' && dir[1] != '/') {
-        throwInvalidDirectory(dir);
+    else if (strcmp(flag, "-w") == 0) { // number of words
+        *isWordCount = 1;
+    }
+    else if (strcmp(flag, "-c") == 0) { // number of bytes
+        *isNumOfBytes = 1;
+    }
+    else {
+        throwInvalidFlag();
+    }
+}
+
+void checkTerminalCommand(int *isWc, int *isSort, char *argv[], int *isNumOfLines, int *isWordCount, int *isNumOfBytes) {
+    char command[MAX_CHAR];
+    strcpy(command, argv[4]);
+
+    if (strcmp(command, "wc") == 0) {
+        *isWc = 1;
+    }
+    else if (strcmp(command, "sort") == 0) {
+        *isSort = 1;
+    }
+    else {
+        throwInvalidCommand();
     }
 
-    // Is the pattern within MAX_PATTERN_CHARACTERS?
-    int index = 0;
-    while ((argv[3])[index] != '\0') {
-        index++;
-    }
+    checkTerminalCommandFlag(argv, isNumOfLines, isWordCount, isNumOfBytes);
+}
 
-    if (index > MAX_PATTERN_CHARACTERS || index < 0) {
-        throwOutOfBoundsPattern();
-    }
+void checkTerminalPipe(char *argv[]) {
+    char pipeCmnd[MAX_CHAR];
+    strcpy(pipeCmnd, argv[3]);
 
-    // if argc = 6, are both either i or n?
-    // if argc = 5, which flag is it?
-    if (argc > 4) {
-        for (int i = 4; i < argc; i++) {
-            // checks to see for double flag entry incase of: ./main grep . once -n -n
-            if ((strcmp(argv[i], "-n") == 0) && (strcmp(argv[i - 1], "-n") != 0)) {
-                *isLines = 1;
-            }
-            // checks to see for double flag entry incase of: ./main grep . once -i -i
-            else if ((strcmp(argv[i], "-i") == 0) && (strcmp(argv[i - 1], "-i") != 0)) {
-                *isCase = 1;
-            }
-            else {
-                throwInvalidFlagOption();
-            }
-        }
+    if (strcmp(pipeCmnd, "\"|\"") != 0 || strcmp(pipeCmnd, "\'|\'") != 0) {
+        throwInvalidPipe();
     }
- }
+}
 
-void checkTerminalArguments(int numArgs) {
+void checkTerminalFilename(char *argv[]) {
+    char filename[MAX_CHAR];
+    strcpy(filename, argv[2]);
+
+
+}
+
+void checkTerminalArguments(int argc) {
     if (argc > 7 || argc < 5) {
         throwOutOfBoundsTerminalInputs();
     }
 }
 
- void checkPipe(int fd) {
-    if (pipe(fd) == -1) {
-        throwPipeError();
-    }
-}
 void checkProcess(pid_t process) {
     if (process == -1) {
         throwProcessError();
