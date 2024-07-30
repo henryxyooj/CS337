@@ -5,7 +5,7 @@
 
 void checkTerminal(int argc, char *argv[], int *isWc, int *isSort, int *isNumOfLines, int *isWordCount, int *isNumOfBytes);
 void checkTerminalArguments(int argc);
-void checkTerminalPipe(char *argv[]);
+//void checkTerminalPipe(char *argv[]);
 void checkTerminalCommand(int *isWc, int *isSort, char *argv[], int *isNumOfLines, int *isWordCount, int *isNumOfBytes);
 void checkTerminalCommandFlag(char *argv[], int *isNumOfLines, int *isWordCount, int *isNumOfBytes);
 void checkTerminalFilename(char *argv[]);
@@ -29,25 +29,54 @@ void pipe_commands(int argc, char *argv[]) {
     pid_t c1pid = fork();
     checkProcess(c1pid);
 
+    if (c1pid == 0) {   // first child process, you're "writing"
+        close(fd[0]);   // close read
+        dup2(fd[0], STDOUT_FILENO);
+        close(fd[1]);   // close write
+
+        char *c1PidArgs[] = {"cat", argv[2], NULL};
+
+        execvp("cat", c1PidArgs);
+        throwExecvpError();
+    }
+
+    // create second child process
     pid_t c2pid = fork();
     checkProcess(c2pid);
 
-    // use pipe to create communication channels between processes
-        // use dup in every child process to connect the appropriate STDIN/STDOUT to the pipe read/write end
+    if (c2pid == 0) { // Second child process, you're "reading"
+        close(fd[1]); // Close write
+        dup2(fd[0], STDIN_FILENO);
+        close(fd[0]); // Close read
 
-    // use the execvp function to execute each of the commands in each child passing necessary flags
-        // call for wc and sort, handled with dup, use it before execvp
+        char *c2PidArgs[] = {"cat", argv[2], "|", NULL, NULL, NULL};
+
+        if (isWc == 1) {
+            c2PidArgs[3] = "wc";
+            c2PidArgs[4] = argv[5];
+            execvp("cat", c2PidArgs);
+            throwExecvpError();
+        }
+        else if (isSort == 1) {
+            c2PidArgs[3] = "sort";
+            execvp("cat", c2PidArgs);
+            throwExecvpError();
+        }
+        else {
+            throwArgError();
+        }
+    }
 
     close(fd[0]);
     close(fd[1]);
-    wait(NULL);
-    wait(NULL);
+    waitpid(c1pid, NULL, 0);
+    waitpid(c2pid, NULL, 0);
 }
 
 void checkTerminal(int argc, char *argv[], int *isWc, int *isSort, int *isNumOfLines, int *isWordCount, int *isNumOfBytes) {
     checkTerminalArguments(argc);
     checkTerminalFilename(argv);
-    checkTerminalPipe(argv);
+    //checkTerminalPipe(argv);
     checkTerminalCommand(isWc, isSort, argv, isNumOfLines, isWordCount, isNumOfBytes);
 }
 
@@ -86,20 +115,26 @@ void checkTerminalCommand(int *isWc, int *isSort, char *argv[], int *isNumOfLine
     checkTerminalCommandFlag(argv, isNumOfLines, isWordCount, isNumOfBytes);
 }
 
+/*
 void checkTerminalPipe(char *argv[]) {
-    char pipeCmnd[MAX_CHAR];
-    strcpy(pipeCmnd, argv[3]);
+    char *pipeCmd = argv[3];
 
-    if (strcmp(pipeCmnd, "\"|\"") != 0 || strcmp(pipeCmnd, "\'|\'") != 0) {
+    if (strcmp(pipeCmd, "\"|\"") != 0 || strcmp(pipeCmd, "'|'") != 0) {
         throwInvalidPipe();
     }
 }
+*/
 
 void checkTerminalFilename(char *argv[]) {
     char filename[MAX_CHAR];
     strcpy(filename, argv[2]);
 
-
+    // https://www.youtube.com/watch?v=S5h3BYg8988&ab_channel=linuxhint
+    struct stat buffer;
+    if (stat(filename, &buffer) != 0) {
+        puts("Error occurred\n");
+        exit(1);
+    }
 }
 
 void checkTerminalArguments(int argc) {

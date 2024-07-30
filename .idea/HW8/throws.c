@@ -4,6 +4,8 @@ void throwInvalidPipe();
 void throwInvalidFlag();
 void throwPipeError();
 void throwProcessError();
+void throwArgError();
+void throwExecvpError();
 
 void throwOutOfBoundsTerminalInputs() {
     puts("Error: Invalid amount of arguments to the terminal.");
@@ -36,5 +38,15 @@ void throwPipeError() {
 
 void throwProcessError() {
     puts("Error creating child process.");
+    exit(1);
+}
+
+void throwArgError() {
+    puts("Error building arguments for cat command.");
+    exit(1);
+}
+
+void throwExecvpError() {
+    puts("Error with execvp function.");
     exit(1);
 }
