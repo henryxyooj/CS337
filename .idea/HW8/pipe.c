@@ -5,7 +5,7 @@
 
 void checkTerminal(int argc, char *argv[], int *isWc, int *isSort, int *isNumOfLines, int *isWordCount, int *isNumOfBytes);
 void checkTerminalArguments(int argc);
-//void checkTerminalPipe(char *argv[]);
+void checkTerminalPipe(char *argv[]);
 void checkTerminalCommand(int *isWc, int *isSort, char *argv[], int *isNumOfLines, int *isWordCount, int *isNumOfBytes);
 void checkTerminalCommandFlag(char *argv[], int *isNumOfLines, int *isWordCount, int *isNumOfBytes);
 void checkTerminalFilename(char *argv[]);
@@ -31,7 +31,7 @@ void pipe_commands(int argc, char *argv[]) {
 
     if (c1pid == 0) {   // first child process, you're "writing"
         close(fd[0]);   // close read
-        dup2(fd[0], STDOUT_FILENO);
+        dup2(fd[1], STDOUT_FILENO);
         close(fd[1]);   // close write
 
         char *c1PidArgs[] = {"cat", argv[2], NULL};
@@ -58,7 +58,7 @@ void pipe_commands(int argc, char *argv[]) {
         }
         else if (isSort == 1) {
             c2PidArgs[0] = "sort";
-            execvp("sort", c2PidArgs);checkTerminalCommandFlag(argv, isNumOfLines, isWordCount, isNumOfBytes);
+            execvp("sort", c2PidArgs);
         }
         else {
             throwArgError();
@@ -75,7 +75,7 @@ void pipe_commands(int argc, char *argv[]) {
 void checkTerminal(int argc, char *argv[], int *isWc, int *isSort, int *isNumOfLines, int *isWordCount, int *isNumOfBytes) {
     checkTerminalArguments(argc);
     checkTerminalFilename(argv);
-    //checkTerminalPipe(argv);
+    checkTerminalPipe(argv);
     checkTerminalCommand(isWc, isSort, argv, isNumOfLines, isWordCount, isNumOfBytes);
 }
 
@@ -98,22 +98,16 @@ void checkTerminalCommandFlag(char *argv[], int *isNumOfLines, int *isWordCount,
 }
 
 void checkTerminalCommand(int *isWc, int *isSort, char *argv[], int *isNumOfLines, int *isWordCount, int *isNumOfBytes) {
-    char command[MAX_CHAR];
-    strcpy(command, argv[4]);
-    char flag[MAX_CHAR];
-    strcpy(flag, argv[5]);
-
-    if (strcmp(command, "wc") == 0) {
-        if (argv[5] == NULL && strcmp(argv[5], "-l") == 0 &&
-            strcmp(argv[5], "-w") == 0 && strcmp(argv[5], "-c")) {
-                *isWc = 1;
+    if (strcmp(argv[4], "wc") == 0) {
+        *isWc = 1;
+        if (argv[5] != NULL) {
                 checkTerminalCommandFlag(argv, isNumOfLines, isWordCount, isNumOfBytes);
             }
         else {
             throwInvalidFlag();
         }
     }
-    else if (strcmp(command, "sort") == 0) {
+    else if (strcmp(argv[4], "sort") == 0) {
         *isSort = 1;
     }
     else {
@@ -121,16 +115,11 @@ void checkTerminalCommand(int *isWc, int *isSort, char *argv[], int *isNumOfLine
     }
 }
 
-/*
 void checkTerminalPipe(char *argv[]) {
-    char pipeCmd[MAX_CHAR];
-    strcpy(pipeCmd, argv[4]);
-
-    if (strcmp(pipeCmd, "|") != 0 && strcmp(pipeCmd, "'|'") != 0) {
+    if ((strcmp(argv[3], "|") != 0) && (strcmp(argv[3], "'|'") != 0)) {
         throwInvalidPipe();
     }
 }
-*/
 
 void checkTerminalFilename(char *argv[]) {
     char filename[MAX_CHAR];
