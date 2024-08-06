@@ -31,11 +31,22 @@ int main() {
         return -1;
     }
 
-    // read the action from stdin
-    char action[BUFFER_SIZE] = {0};
-    printf("Enter action: ");
-    fgets(action, BUFFER_SIZE, stdin);
+    // send a greeting to the server and requests the encryption key in the same message
+    char *greeting[BUFFER_SIZE] = "Hello from client!  Requesting an encryption key...\n";
+    write(sock, greeting, strlen(greeting));
 
+    // upon receiving the key from the server, the client prompts the user to input a message from stdin
+    char message[BUFFER_SIZE] = {0};
+    fgets(message, BUFFER_SIZE, stdin);
+    printf("Enter a message: ");
+
+    // until user inputs "quit", keep sending encrypted messages that's been shifted to the server
+    while (strcmp(message, "quit") != 0 && strcmp(message, "QUIT") != 0) {
+        write(sock, message, strlen(message));
+    }
+
+    //if the user inputs "quit", the client sends the quit message and closes its socket, and terminates
+    close(sock);
 
     return 0;
 }
