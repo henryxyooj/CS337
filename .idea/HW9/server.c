@@ -10,12 +10,12 @@
 #define PORT 8080
 #define BUFFER_SIZE 1024
 
-void decrypt(char input[BUFFER_SIZE], char stringBuilder[BUFFER_SIZE], int shift) {
-    for (unsigned long i = 0; i < strlen(input); i++) {
-        if ((input[i] >= 'a' && input[i] <= 'z')) {
-            input[i] = ((input[i] - 'a') - shift) % 26 + 'a';
+void decrypt(char message[BUFFER_SIZE], int key) {
+    for (unsigned long i = 0; i < strlen(message); i++) {
+        if ((message[i] >= 'a' && message[i] <= 'z')) {
+            message[i] = ((message[i] - 'a') - key) % 26 + 'a';
         } else if ((input[i] >= 'A' && input[i] <= 'Z')) {
-            input[i] = ((input[i] - 'A') - shift) % 26 + 'A';
+            message[i] = ((message[i] - 'A') - key) % 26 + 'A';
         }
     }
 }
@@ -61,26 +61,28 @@ int main() {
         printf("Connecting to Client %d\n", client_count);
         if (client_count > 5) {
             perror("Exceeded maximum client capacity\n");
+            close(new_socket);
             return 1;
         }
 
-        // newline gets the pos of the "\n" of type size_t
-        // MAY NEED THIS, KEEP IT HERE, CHANGE "data" IF NEEDED--------
-        size_t newline = strcspn(data, "\n");
-        if (data[newline] == '\n') {
-            data[newline] = '\0';
-        }
+        if (fork() == 0) {  // child process
+            // what was sent from the client?
+            char msg_from_client[BUFFER_SIZE] = {0};
+            read(new_socket, msg_from_client, BUFFER_SIZE);
+            printf("%s", msg_from_client);
 
-        if (fork() == 0) {
+            // generate a random key
             srand(time(NULL));
             int key = rand() % (25 - 1 + 1) + 1;
             printf("Key from server: %d", key);
 
+            // convert the key from integer to string with sprintf and send it to client
             char key_to_client[BUFFER_SIZE] = {0};
             sprintf(key_to_client, "%d", key);
             write(new_socket, key_to_client, strlen(key_to_client));
 
             while (1) {
+                // reads the message that's going to be converted
                 read(new_socket, key_to_client, BUFFER_SIZE);
 
                 if (strcmp(key_to_client, "quit") == 0 || strcmp(key_to_client, "QUIT") == 0) {
@@ -88,14 +90,16 @@ int main() {
                     break;
                 }
 
-                decrypt();
+                char encoded_msg[BUFFER_SIZE] = {0};
+                decrypt(encoded_msg, key);
+                printf("Encoded message: %s");
 
                 write(new_socket, key_to_client, strlen(key_to_client));
             }
 
             close(new_socket);
         }
-        else {
+        else {  // parent process
             close(new_socket);
         }
     }

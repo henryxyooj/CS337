@@ -9,6 +9,15 @@
 #define PORT 8080
 #define BUFFER_SIZE 1024
 
+void encrypt(char message[BUFFER_SIZE], int key) {
+    for (unsigned long i = 0; i < strlen(message); i++) {
+        if ((message[i] >= 'a' && message[i] <= 'z')) {
+            message[i] = ((message[i] - 'a') + key) % 26 + 'a';
+        } else if ((message[i] >= 'A' && message[i] <= 'Z')) {
+            message[i] = ((message[i] - 'A') + key) % 26 + 'A';
+        }
+    }
+}
 
 int main() {
     int sock = 0;
@@ -32,17 +41,38 @@ int main() {
     }
 
     // send a greeting to the server and requests the encryption key in the same message
-    char *greeting[BUFFER_SIZE] = "Hello from client!  Requesting an encryption key...\n";
+    char greeting[BUFFER_SIZE] = "Hello from client, can you send me the key?\n";
     write(sock, greeting, strlen(greeting));
 
     // upon receiving the key from the server, the client prompts the user to input a message from stdin
-    char message[BUFFER_SIZE] = {0};
-    fgets(message, BUFFER_SIZE, stdin);
-    printf("Enter a message: ");
+    char server_message[BUFFER_SIZE] = {0};
+
+    // get the key from the server
+    read(sock, server_message, strlen(server_message));
+    int key = atoi(server_message);
+    printf("Key from server: %d", key);
 
     // until user inputs "quit", keep sending encrypted messages that's been shifted to the server
-    while (strcmp(message, "quit") != 0 && strcmp(message, "QUIT") != 0) {
+    while (1) {
+        // take the input and store it into message to prepare the socket for the server
+        char message[BUFFER_SIZE] = {0};
+        printf("Enter a message: ");
+        fgets(message, BUFFER_SIZE, stdin);
+
+        // once the user inputs quit into the terminal, terminate the loop
+        if (strcmp(message, "quit") == 0 || strcmp(message, "QUIT") == 0) {
+            write(sock, "quit", strlen("quit"));
+            break;
+        }
+
+        // encrypt it and send the message to the server
+        encrypt(message, key);
         write(sock, message, strlen(message));
+
+        // receive the decrypted message from the server
+        read(sock, server_message, BUFFER_SIZE);
+        printf("Encoded message (type 'quit' to exit): %s", server_message);
+
     }
 
     //if the user inputs "quit", the client sends the quit message and closes its socket, and terminates
