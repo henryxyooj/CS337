@@ -8,6 +8,13 @@
 
 Usage:
 * The maximum amount of clients is 5, use the compiler and type in the command ./server to use this program
+
+Citation:
+* https://stackoverflow.com/questions/33029231/forked-process-child-and-parent-process-shared-socket-implications
+* I had an issue where I was getting some weird output on my ./server terminal.  Line 96 was what was used to remedy that.
+* So the child process inherits a copy of the parent's file descriptors, but it doesn't need the listening sockets because
+* that's used for multiple incoming connections on the address and port.  So, the parent process can take care of that instead,
+* so I can just close it instead, I was also closing the socket itself at first, but closing the listening one worked.
 *******************************************************************/
 
 #include <stdio.h>
@@ -24,14 +31,14 @@ Usage:
 
 /*******************************************************************
 * Description: this function decrypts the message received from the client
-                that's been shifted by a randomly generated key 
+                that's been shifted by a randomly generated key
 *******************************************************************/
 void decrypt(char message[BUFFER_SIZE], int key) {
     for (unsigned long i = 0; i < strlen(message); i++) {
         if ((message[i] >= 'a' && message[i] <= 'z')) {
-            message[i] = ((message[i] - 'a') - key) % 26 + 'a';
+            message[i] = ((message[i] - 'a') - key + 26) % 26 + 'a';
         } else if ((message[i] >= 'A' && message[i] <= 'Z')) {
-            message[i] = ((message[i] - 'A') - key) % 26 + 'A';
+            message[i] = ((message[i] - 'A') - key + 26) % 26 + 'A';
         }
     }
 }
